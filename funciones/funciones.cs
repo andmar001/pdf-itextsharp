@@ -190,28 +190,92 @@ namespace PDF_generator
 
             document.Open();
 
-            //Fuentes,, estas fuentes se reciben como segunda parametros en el objeto que se 
-            BaseFont bf = BaseFont.CreateFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-            iTextSharp.text.Font fuente_titulo = new iTextSharp.text.Font(bf, 16, iTextSharp.text.Font.BOLD, BaseColor.GREEN);
-            iTextSharp.text.Font base_parrafo = new iTextSharp.text.Font(bf, 16, iTextSharp.text.Font.BOLD, new BaseColor(255,0,75)); //
+            iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance("logo.png");
+            logo.ScaleToFit(400f, 400f);
+            logo.Alignment = Element.ALIGN_CENTER;
+            logo.ScalePercent(50f);
+            document.Add(logo);
 
-
-            document.Add(new Phrase("Reporte de Venta", fuente_titulo));
-            document.Add(new Paragraph(propiedades.Lorem));
-            document.Add(new Paragraph("Este es un \nsaldo de linea"));    
-            document.Add(new Paragraph("Esta es una \t\t tabulación"));
-            document.Add(new Paragraph("Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500"){Alignment = Element.ALIGN_JUSTIFIED});
-
-            //salto de linea - dos formas de hacerlo
-            document.Add(new Paragraph(" "));
-            document.Add(Chunk.NEWLINE);
-            string path = "C:\\Users\\DGTITAANDRADLAP\\Desktop\\logo.png";
-
-
+            // write text on image
+            var cb = writer.DirectContentUnder;
+            var bf2 = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+            cb.BeginText();
+            cb.SetFontAndSize(bf2, 12);
+            cb.SetRGBColorFill(0, 0, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "This is a watermark", 100, 100, 0);
+            cb.EndText();
 
             document.Close();
             file.Close();  
         }
 
+        public void GenerarImagenesMedidasEspeciales()
+        {
+             Propiedades propiedades = new Propiedades();    
+
+            Document document = new Document(PageSize.LETTER);
+            document.SetPageSize(PageSize.A4);
+            document.SetMargins(90f, 90f,90f, 90f);
+
+            FileStream file = new FileStream(propiedades.Nombre, FileMode.Create, FileAccess.Write, FileShare.None);
+
+            PdfWriter writer = PdfWriter.GetInstance(document, file);
+
+            document.Open();
+
+            iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance("boleto.png");
+            logo.ScaleToFit(396.85f,581.1024f);  //medidas en especificas. punto a cm
+            logo.Alignment = Element.ALIGN_CENTER;
+            logo.ScalePercent(50f);
+          
+          
+            document.Add(logo);
+
+            
+            document.Close();
+            file.Close();  
+
+
+        }
+
+        public void GenerarPDFTablas()
+        {
+            Propiedades propiedades = new Propiedades();    
+
+            Document document = new Document(PageSize.LETTER);
+            document.SetPageSize(PageSize.A4);
+            document.SetMargins(90f, 90f,90f, 90f);
+
+            FileStream file = new FileStream(propiedades.Nombre, FileMode.Create, FileAccess.Write, FileShare.None);
+
+            PdfWriter writer = PdfWriter.GetInstance(document, file);
+
+            document.Open();
+
+            PdfPTable table = new PdfPTable(3);
+            table.WidthPercentage = 100;
+            table.HorizontalAlignment = Element.ALIGN_LEFT;
+            table.SpacingBefore = 10f;
+            table.SpacingAfter = 10f;
+
+            PdfPCell cell = new PdfPCell(new Phrase("Tabla de prueba"));
+            cell.Colspan = 3;
+            cell.HorizontalAlignment = 1;
+            table.AddCell(cell);
+
+            table.AddCell("Celda 1");
+            table.AddCell("Celda 2");
+            table.AddCell("Celda 3");
+            table.AddCell("Celda 4");
+            table.AddCell("Celda 5");
+            table.AddCell("Celda 6");
+
+            document.Add(table);
+
+            document.Close();
+            file.Close();  
+        }
     }
 }
+
+// Hola, si usas netcore 3 en adelante debes usar IWebHostEnvironment para netcore 2 usa IHostingEnvironment, aunque igualmente para ninguno de los dos debería marcarte error si has importado el espacio de nombres using Microsoft.AspNetCore.Hosting;

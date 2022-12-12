@@ -17,8 +17,10 @@ namespace PDF_generator
             // f.GenerarPDFinMemory();
             // f.GenerarPDFsizePageIdeal();  // MArgenes similares al boleto
             // f.GenerarPDFTextos();
-            f.GenerarPDFFuentes();
-
+            // f.GenerarPDFFuentes();
+            // f.GenerarPDFTablas();
+            // f.GenerarPDFImagenes();
+            f.GenerarImagenesMedidasEspeciales();
         }
     }
 }
