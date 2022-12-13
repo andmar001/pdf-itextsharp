@@ -443,29 +443,32 @@ namespace PDF_generator
     
     public void GenerarTextoDentroImagen()
     {
-        Propiedades propiedades = new Propiedades();
+        {
+            
+            Propiedades propiedades = new Propiedades();
 
-        Document document = new Document(PageSize.LETTER);
-        document.SetPageSize(PageSize.A4);
-        document.SetMargins(200f, 200f, 200f, 200f);
+            Document document = new Document(PageSize.LETTER);
+            document.SetPageSize(PageSize.A4);
+            document.SetMargins(200f, 200f, 200f, 200f);
 
-        FileStream file = new FileStream(propiedades.Nombre, FileMode.Create, FileAccess.Write, FileShare.None);
+            FileStream file = new FileStream(propiedades.Nombre, FileMode.Create, FileAccess.Write, FileShare.None);
 
-        PdfWriter writer = PdfWriter.GetInstance(document, file);
+            PdfWriter writer = PdfWriter.GetInstance(document, file);
 
-        document.Open();
+            document.Open();
 
-        iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance("boleto.png");
-        logo.ScaleToFit(396.85f, 581.1024f);
-        logo.Alignment = iTextSharp.text.Image.UNDERLYING;
-        logo.SetAbsolutePosition(100, 130);
-        document.Add(logo);
+            iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance("boleto.png");
+            logo.ScaleToFit(396.85f, 581.1024f);
+            logo.Alignment = iTextSharp.text.Image.UNDERLYING;
+            logo.SetAbsolutePosition(100, 130);
+            document.Add(logo);
 
-        Phrase frase = new Phrase("Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500", FontFactory.GetFont(FontFactory.HELVETICA, 10, Font.NORMAL, BaseColor.BLACK));
-        ColumnText.ShowTextAligned(writer.DirectContent, Element.ALIGN_LEFT, frase, 100, 100, 0);
-        document.Add(frase); 
+            Phrase frase = new Phrase("Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500", FontFactory.GetFont(FontFactory.HELVETICA, 10, Font.NORMAL, BaseColor.BLACK));
+            ColumnText.ShowTextAligned(writer.DirectContent, Element.ALIGN_LEFT, frase, 100, 100, 0);
+            document.Add(frase); 
 
-        document.Close();
+            document.Close();
+        }
     }
 }
 
