@@ -227,15 +227,25 @@ namespace PDF_generator
             logo.ScaleToFit(396.85f,581.1024f);  //medidas en especificas. punto a cm
             logo.Alignment = Element.ALIGN_CENTER;
             logo.ScalePercent(50f);
-          
-          
-            document.Add(logo);
 
+            //write over the image
+            var cb = writer.DirectContentUnder;
+            var bf2 = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+            cb.BeginText();
+            cb.SetFontAndSize(bf2, 12);
+            
+            cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "This is a watermark", 400,100, 0);
+            cb.EndText();
+
+            document.Add(new Phrase(logo.ScaledWidth + " " + logo.ScaledHeight));
+            document.Add(new Phrase(logo.ScaledWidth + " " + logo.ScaledHeight));
+            document.Add(new Phrase(logo.ScaledWidth + " " + logo.ScaledHeight));
+            document.Add(new Phrase(logo.ScaledWidth + " " + logo.ScaledHeight));
+
+            document.Add(logo);
             
             document.Close();
             file.Close();  
-
-
         }
 
         public void GenerarPDFTablas()
@@ -275,7 +285,163 @@ namespace PDF_generator
             document.Close();
             file.Close();  
         }
+        public void GenerarImagenenTabla()
+        {
+            Propiedades propiedades = new Propiedades();    
+
+            Document document = new Document(PageSize.LETTER);
+            document.SetPageSize(PageSize.A4);
+            document.SetMargins(90f, 90f,90f, 90f);
+
+            FileStream file = new FileStream(propiedades.Nombre, FileMode.Create, FileAccess.Write, FileShare.None);
+
+            PdfWriter writer = PdfWriter.GetInstance(document, file);
+
+            document.Open();
+
+            PdfPTable table = new PdfPTable(3);
+            table.WidthPercentage = 100;
+            table.HorizontalAlignment = Element.ALIGN_LEFT;
+            table.SpacingBefore = 10f;
+            table.SpacingAfter = 10f;
+
+            PdfPCell cell = new PdfPCell(new Phrase("Tabla de prueba"));
+            cell.Colspan = 3;
+            cell.HorizontalAlignment = 1;
+            table.AddCell(cell);
+
+            table.AddCell("Celda 1");
+            table.AddCell("Celda 2");
+            table.AddCell("Celda 3");
+            table.AddCell("Celda 4");
+            table.AddCell("Celda 5");
+            table.AddCell("Celda 6");
+
+            iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance("boleto.png");
+            logo.ScaleToFit(400f, 400f);
+            logo.Alignment = Element.ALIGN_CENTER;
+            logo.ScalePercent(50f);
+
+            PdfPCell cell2 = new PdfPCell(logo);
+            cell2.Colspan = 3;
+            cell2.HorizontalAlignment = 1;
+            table.AddCell(cell2);
+
+            document.Add(table);
+
+            document.Close();
+            file.Close();  
+        } 
+        public void ImageOverTable()
+        {
+            Propiedades prop = new Propiedades();
+
+            iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance("boleto.png");
+            logo.ScaleToFit(396.85f, 581.1024f);
+            using (var stream = new FileStream( prop.Nombre+".pdf", FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                var document = new Document(PageSize.A4, 0, 0, 0, 0);
+                var writer = PdfWriter.GetInstance(document, stream);
+                document.Open();
+                var cb = writer.DirectContentUnder;
+                var bf2 = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, true);
+                cb.BeginText();
+                cb.SetFontAndSize(bf2, 12);
+                cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "This is a watermark", 400, 400, 0);
+                cb.EndText();
+                document.Add(logo);
+                document.Close();
+            }
+        }
+
+        public void OverImage()
+        {
+            Propiedades prop = new Propiedades();
+            string texto = "This is a test";
+
+            try
+            {
+                //create a pdf document
+                Document documentPDF = new Document(PageSize.LETTER, 50f, 0f, 50f, 0f);
+                PdfWriter writer = PdfWriter.GetInstance(documentPDF, new FileStream(prop.Nombre + ".pdf", FileMode.Create));
+                documentPDF.Open();
+
+                //create a image and configure it
+                iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance("boleto.png");
+                image.BorderWidth = 0;
+                image.Alignment = Element.ALIGN_BASELINE;
+                image.ScalePercent(25);
+
+                //add image to document
+                documentPDF.Add(image);
+
+                //add text to document
+                documentPDF.Add(new Paragraph(prop.Lorem));
+
+                //close document
+                documentPDF.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        public void mostrarTabla()
+        {
+            Propiedades propiedades = new Propiedades();
+
+            Document document = new Document(PageSize.LETTER);
+            document.SetPageSize(PageSize.A4);
+            document.SetMargins(90f, 90f, 90f, 90f);
+
+            FileStream file = new FileStream(propiedades.Nombre, FileMode.Create, FileAccess.Write, FileShare.None);
+
+            PdfWriter writer = PdfWriter.GetInstance(document, file);
+
+            document.Open();
+
+            //parrafo
+            Paragraph parrafo = new Paragraph("Hola mundo");
+            parrafo.AsParallel();
+            document.Add(parrafo);
+
+
+            PdfPTable t;
+            PdfPCell c;
+
+            iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance("boleto.png");
+
+            t = new PdfPTable(1);
+            t.WidthPercentage = 100;
+
+            float[] widths = new float[1];
+            widths[0] = 10;
+            t.SetWidths(widths);
+
+            c = new PdfPCell(logo);
+            c.Border = 0;
+            c.VerticalAlignment = Element.ALIGN_TOP;
+            c.HorizontalAlignment = Element.ALIGN_LEFT;
+            t.AddCell(c);
+
+            document.Add(t);
+            //add text in the middle of the page
+            var cb = writer.DirectContentUnder;
+            var bf2 = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, false);
+            // over the existing content
+            cb.BeginText();
+            cb.SetColorFill(BaseColor.GREEN);
+            cb.SetFontAndSize(bf2, 12);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "This is a watermark", 100, 100, 0);
+            cb.EndText();
+
+
+            document.Close();
+           
+        }
     }
+
 }
 
 // Hola, si usas netcore 3 en adelante debes usar IWebHostEnvironment para netcore 2 usa IHostingEnvironment, aunque igualmente para ninguno de los dos debería marcarte error si has importado el espacio de nombres using Microsoft.AspNetCore.Hosting;
+// https://stackoverflow.com/questions/8657857/itextsharp-text-overlapping-image

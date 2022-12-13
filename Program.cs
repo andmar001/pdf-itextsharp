@@ -20,7 +20,11 @@ namespace PDF_generator
             // f.GenerarPDFFuentes();
             // f.GenerarPDFTablas();
             // f.GenerarPDFImagenes();
-            f.GenerarImagenesMedidasEspeciales();
+            // f.GenerarImagenesMedidasEspeciales();
+            // f.GenerarImagenenTabla();
+            // f.mostrarTabla();
+            // f.ImageOverTable();
+            f.OverImage();
         }
     }
 }
